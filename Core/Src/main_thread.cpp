@@ -8,6 +8,7 @@
 #include <stm32rcos/module/ps3.hpp>
 #include <stm32rcos/peripheral/bxcan.hpp>
 
+#include "omuni3.hpp"
 extern CAN_HandleTypeDef hcan1;
 extern CAN_HandleTypeDef hcan2;
 extern UART_HandleTypeDef huart2;
@@ -25,6 +26,7 @@ extern "C" void main_thread(void *) {
   uart2.enable_stdout();
   UART uart5(&huart5);
   PS3 ps3(uart5);
+  Control control;
 
   BxCAN can1(&hcan1);
   C6x0Manager c610_manager(can1);
@@ -33,15 +35,36 @@ extern "C" void main_thread(void *) {
   C6x0 c610_3(c610_manager, C6x0Type::C610, C6x0ID::_3);
   can1.start();
 
+  omuni3 omuni3;
+  Tire tire_actual;
+  Tire tire_output;
+
   while (true) {
     std::uint32_t start = osKernelGetTickCount();
     ps3.update();
-
-    if (ps3.get_key(PS3Key::CIRCLE)) {
-      c610_1.set_current(1000);
-    } else {
-      c610_1.set_current(0);
-    }
     c610_manager.update();
+
+    control.x = ps3.get_axis(PS3Axis::RIGHT_X);
+    control.y = ps3.get_axis(PS3Axis::RIGHT_Y);
+    if (ps3.get_key(PS3Key::R1)) {
+      control.turnspeed = 50;
+    } else if (ps3.get_key(PS3Key::L1)) {
+      control.turnspeed = -50;
+    } else {
+      control.turnspeed = 0;
+    }
+
+    tire_actual.Tire_1 = c610_1.get_rps();
+    tire_actual.Tire_2 = c610_2.get_rps();
+    tire_actual.Tire_3 = c610_3.get_rps();
+    omuni3.get_speed(tire_actual);
+    tire_output = omuni3.output(control, 90);
+
+    c610_1.set_current(tire_output.Tire_1);
+    c610_2.set_current(tire_output.Tire_2);
+    c610_3.set_current(tire_output.Tire_3);
+
+    c610_manager.transmit();
+    osDelayUntil(start + 10);
   }
 }
