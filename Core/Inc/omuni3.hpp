@@ -33,7 +33,8 @@ public:
     Tire tire_output;
 
     // X, Yを300度回転
-    float theta = M_PI * 5 / 3; // 300度
+    //float theta = M_PI * 5 / 3; // 300度
+     float theta = 0; // 0度
     float rotated_x = control.x * cos(theta) - control.y * sin(theta);
     float rotated_y = control.x * sin(theta) + control.y * cos(theta);
 
@@ -50,9 +51,9 @@ public:
     tire_diff.Tire_2 = tire_target.Tire_2 - tire_actual_.Tire_2;
     tire_diff.Tire_3 = tire_target.Tire_3 - tire_actual_.Tire_3;
 
-    tire_output.Tire_1 = clamp(tire_diff.Tire_1 * K_, -2000, 2000);
-    tire_output.Tire_2 = clamp(tire_diff.Tire_2 * K_, -2000, 2000);
-    tire_output.Tire_3 = clamp(tire_diff.Tire_3 * K_, -2000, 2000);
+    tire_output.Tire_1 = clamp(tire_diff.Tire_1 * K_, -10000, 10000);
+    tire_output.Tire_2 = clamp(tire_diff.Tire_2 * K_, -10000, 10000);
+    tire_output.Tire_3 = clamp(tire_diff.Tire_3 * K_, -10000, 10000);
 
     return tire_output;
   }

@@ -46,19 +46,13 @@ extern "C" void main_thread(void *) {
 
     control.x = ps3.get_axis(PS3Axis::RIGHT_X);
     control.y = ps3.get_axis(PS3Axis::RIGHT_Y);
-    if (ps3.get_key(PS3Key::R1)) {
-      control.turnspeed = 50;
-    } else if (ps3.get_key(PS3Key::L1)) {
-      control.turnspeed = -50;
-    } else {
-      control.turnspeed = 0;
-    }
+    control.turnspeed = 50 * ps3.get_axis(PS3Axis::LEFT_X);
 
     tire_actual.Tire_1 = c610_1.get_rps();
     tire_actual.Tire_2 = c610_2.get_rps();
     tire_actual.Tire_3 = c610_3.get_rps();
     omuni3.get_speed(tire_actual);
-    tire_output = omuni3.output(control, 90);
+    tire_output = omuni3.output(control, 130);
 
     c610_1.set_current(tire_output.Tire_1);
     c610_2.set_current(tire_output.Tire_2);
