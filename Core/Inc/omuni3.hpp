@@ -27,24 +27,19 @@ public:
     tire_actual_.Tire_2 = tire_actual.Tire_2;
     tire_actual_.Tire_3 = tire_actual.Tire_3;
   }
-  Tire output(Control control, float speed) {
+  Tire output(Control control, float speed, float theta = 0) {
     Tire tire_target;
     Tire tire_diff;
     Tire tire_output;
 
-    // X, Yを300度回転
-    //float theta = M_PI * 5 / 3; // 300度
-     float theta = 0; // 0度
-    float rotated_x = control.x * cos(theta) - control.y * sin(theta);
-    float rotated_y = control.x * sin(theta) + control.y * cos(theta);
-
     tire_target.Tire_1 =
-        speed * (rotated_x * cos(0) + rotated_y * sin(0)) + control.turnspeed;
-    tire_target.Tire_2 = speed * (rotated_x * cos((M_PI * 2 / 3)) +
-                                  rotated_y * sin((M_PI * 2 / 3))) +
+        speed * (control.x * cos(0 + theta) + control.y * sin(0 + theta)) +
+        control.turnspeed;
+    tire_target.Tire_2 = speed * (control.x * cos((M_PI * 2 / 3) + theta) +
+                                  control.y * sin((M_PI * 2 / 3) + theta)) +
                          control.turnspeed;
-    tire_target.Tire_3 = speed * (rotated_x * cos((M_PI * 4 / 3)) +
-                                  rotated_y * sin((M_PI * 4 / 3))) +
+    tire_target.Tire_3 = speed * (control.x * cos((M_PI * 4 / 3) + theta) +
+                                  control.y * sin((M_PI * 4 / 3) + theta)) +
                          control.turnspeed;
 
     tire_diff.Tire_1 = tire_target.Tire_1 - tire_actual_.Tire_1;

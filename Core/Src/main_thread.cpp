@@ -104,7 +104,7 @@ extern "C" void main_thread(void *) {
     tire_actual.Tire_2 = c610_2.get_rps();
     tire_actual.Tire_3 = c610_3.get_rps();
     omuni3.get_speed(tire_actual);
-    tire_output = omuni3.output(control, 300, target_theta);
+    tire_output = omuni3.output(control, 300, theta);
 
     c610_1.set_current(tire_output.Tire_1);
     c610_2.set_current(tire_output.Tire_2);

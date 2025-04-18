@@ -27,9 +27,13 @@
             "serverArgs": [
                 "-m","0",
             ],
+            "liveWatch": {
+                "enabled": true,
+                "samplesPerSecond": 1
+            }
             //"preLaunchTask": "Build + Flash"
             /* If you use external loader, add additional arguments */
-            //"serverArgs": ["--extload", "path/to/ext/loader.stldr"],
+            //"serverArgs": ["--ex  tload", "path/to/ext/loader.stldr"],
         },
         {
             "name": "Attach to Microcontroller - ST-Link",
